@@ -1,0 +1,55 @@
+#+title: Konstruksjon av markedsdatabase
+* Database for market information
+** Plants
+*** LNG
+**** liquefaction-plants
+***** liq-plant
+**** regasification-terminals
+***** regas-term
+*** Power
+**** tables
+***** power-plant-lookup
+****** utilities
+#+begin_src sqlite
+CREATE TABLE utility(
+comp    TEXT NOT NULL REFERENCES company(id),
+short   TEXT,
+country NOT NULL REFERENCES country(id),
+PRIMARY KEY(comp,country));
+#+end_src
+******* insert into utilities
+#+begin_src sqlite
+INSERT INTO utility(id,short,country) VALUES('Chugoku Electric Power Company','CEPCO','Japan');
+INSERT INTO utility(id,short,country) VALUES('Chubu Electric Power','Chuden','Japan');
+INSERT INTO utility(id,short,country) VALUES('Hokuriku Electric Power Company','Hokuden','Japan');
+INSERT INTO utility(id,short,country) VALUES('Hokkaido Electric Power Company','HEPCO','Japan');
+INSERT INTO utility(id,short,country) VALUES('Kyushu Electric Power','Kyuden','Japan');
+INSERT INTO utility(id,short,country) VALUES('Kansai Electric Power Company','KEPCO','Japan');
+INSERT INTO utility(id,short,country) VALUES('Okinawa Electric Power Company','Okiden','Japan');
+INSERT INTO utility(id,short,country) VALUES('Tokyo Electric Power Company','TEPCO','Japan');
+#+end_src
+****** power-source
+#+begin_src sqlite
+CREATE TABLE power_source(
+id NOT NULL PRIMARY KEY);
+#+end_src
+******* insert into power-source
+#+begin_src sqlite
+INSERT INTO power_source(id) VALUES('nuclear');
+INSERT INTO power_source(id) VALUES('thermal-gas');
+INSERT INTO power_source(id) VALUES('thermal-coal');
+INSERT INTO power_source(id) VALUES('thermal-fuel');
+INSERT INTO power_source(id) VALUES('hydro');
+INSERT INTO power_source(id) VALUES('solar');
+INSERT INTO power_source(id) VALUES('wind');
+#+end_src
+***** power-plant
+#+begin_src sqlite
+CREATE TABLE power_plant(
+id           TEXT NOT NULL PRIMARY KEY,
+utility      TEXT NOT NULL REFERENCES utility(id),
+power_source TEXT REFERENCES power_source(id),
+cap_gw       REAL NOT NULL,
+oper_status  TEXT NOT NULL,
+location     TEXT);
+#+end_src
