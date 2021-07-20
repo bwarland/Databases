@@ -1,0 +1,8 @@
+"brownfield"
+"debottlenecking"
+"expansion"
+"floating conversion"
+"floating inshore"
+"floating offshore"
+"greenfield"
+"undecided"
