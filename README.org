@@ -4,8 +4,29 @@
 *** LNG
 **** liquefaction-plants
 ***** liq-plant
+#+begin_src sqlite
+CREATE TABLE liq_plant(
+l_name       TEXT NOT NULL REFERENCES site_name(id),
+l_train      INTEGER NOT NULL DEFAULT 1,
+l_status     TEXT NOT NULL REFERENCES plant_status(id),
+site_status  TEXT REFERENCES site_status(id), 
+base_mtpa    REAL,
+peak_mtpa    REAL,
+l_port       TEXT REFERENCES port(id),
+start_date   INTEGER DEFAULT 0,
+start_year   INTEGER DEFAULT 0,
+storage_m3   REAL DEFAULT 0,
+tanks        INTEGER DEFAULT 1,
+max_cargo_m3 REAL DEFAULT 0,
+l_operator   TEXT REFERENCES company(id) DEFAULT "nomen_nescio",
+PRIMARY KEY(l_name,l_train));
+#+end_src
 **** regasification-terminals
 ***** regas-term
+#+begin_src sqlite
+CREATE TABLE regas_term(
+
+#+end_src
 *** Power
 **** tables
 ***** power-plant-lookup
@@ -52,4 +73,49 @@ power_source TEXT REFERENCES power_source(id),
 cap_gw       REAL NOT NULL,
 oper_status  TEXT NOT NULL,
 location     TEXT);
+#+end_src
+*** Plant-lookups
+**** plant-status
+#+begin_src sqlite
+CREATE TABLE plant_status(
+id TEXT NOT NULL PRIMARY KEY);
+#+end_src
+***** insert-into-plant-status
+#+begin_src sqlite
+INSERT INTO plant_status(id) VALUES('operational');
+INSERT INTO plant_status(id) VALUES('speculative');
+INSERT INTO plant_status(id) VALUES('mothballed');
+INSERT INTO plant_status(id) VALUES('cancelled');
+INSERT INTO plant_status(id) VALUES('under-construction');
+INSERT INTO plant_status(id) VALUES('commissioning');
+#+end_src
+**** site-name
+#+begin_src sqlite
+CREATE TABLE site_name(
+id TEXT NOT NULL PRIMARY KEY);
+#+end_src
+**** company
+#+begin_src sqlite
+CREATE TABLE company(
+id       TEXT NOT NULL PRIMARY KEY,
+web_site TEXT,
+comment  TEXT);
+#+end_src
+**** port
+#+begin_src sqlite
+CREATE TABLE port(
+id             TEXT NOT NULL PRIMARY KEY,
+basin          TEXT NOT NULL REFERENCES basin(id),
+country        TEXT NOT NULL REFERENCES country(id),
+sea            TEXT NOT NULL DEFAULT "nomen_nescio",
+load_days      REAL NOT NULL DEFAULT 0,
+discharge_days REAL NOT NULL DEFAULT 0,
+port_cost      REAL NOT NULL DEFAULT 0,
+latitude       REAL NOT NULL DEFAULT 0,
+longitude      REAL NOT NULL DEFAULT 0);
+#+end_src
+**** site-status
+#+begin_src sqlite
+CREATE TABLE site_status(
+id TEXT NOT NULL PRIMARY KEY);
 #+end_src
